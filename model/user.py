@@ -1,27 +1,25 @@
-from pwdlib import PasswordHash
 from fastapi import HTTPException, status
 from sqlmodel import Session, select
+from sqlalchemy import update
+from sqlalchemy.exc import IntegrityError
 
 from model.models import User
-
-bcrypt_context = PasswordHash.recommended()
-
-def hash_pass(value: str) -> str:
-    mdp = bcrypt_context.hash(value)
-    return mdp
+from utils.pwd_bcrypt import hash_pwd_bcrypt
 
 #Ajouter un utilisateur dans la bdd
 def add_user(data: User, session:Session) -> User:
     utilisateur = data
-    hash_mdp = hash_pass(utilisateur.password)
+    hash_mdp = hash_pwd_bcrypt(utilisateur.password)
     utilisateur.password = hash_mdp
     try:
         session.add(utilisateur)
         session.commit()
         session.refresh(utilisateur)
-    except IndexError:
-        print("erreur avec l'enregistrement")
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+        
+    except IntegrityError:
+        session.rollback()
+        print("erreur avec l'enregistrement | unique index")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="information déjà disponible")
         
     finally:
         session.close()
@@ -31,7 +29,7 @@ def add_user(data: User, session:Session) -> User:
 #Get user avec son email ou son pseudo
 def get_user(value: str, session: Session) -> User|None:
     try:
-        stmt = select(User).where(User.email == value)
+        stmt = select(User).where((User.email == value) | (User.pseudo == value))
         user = session.exec(statement=stmt).first()
     finally:
         session.close()
