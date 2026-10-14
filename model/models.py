@@ -29,9 +29,9 @@ class DetteBase(SQLModel):
     motif: str
     devise: Devise
     montant: float
-    proprio: str
+    proprio: str | None
     statut: bool = Field(default=False)
-    user_id: int = Field(foreign_key="user.id")
+    user_id: int = Field(default=None, foreign_key="user.id")
     created_at: datetime = Field(default=datetime.now(timezone.utc))
 
 class Dette(DetteBase, table=True):

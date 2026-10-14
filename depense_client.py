@@ -64,7 +64,7 @@ async def update_depense(id: UUID,
     if donnee.user_id != utilisateur.id:
          raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="operation pas permise")
 
-    donne_retur = update_depense_id(id=id, data=data, session=session, depense=donnee)
+    donne_retur = update_depense_id(data=data, session=session, depense=donnee)
     return donne_retur
 
 @app_depense.delete("/{id}")
