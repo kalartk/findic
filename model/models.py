@@ -8,7 +8,7 @@ class UserBase(SQLModel):
     nom: str
     prenom: str
     email: str = Field(unique=True, index=True)
-    password: str
+    password: str = Field(min_length=4)
     pseudo: str | None = Field(default=None, unique=True, index=True)
     created_at: datetime = Field(default=datetime.now(timezone.utc))
 
@@ -38,7 +38,8 @@ class Dette(DetteBase, table=True):
     id: UUID = Field(default=uuid7(), primary_key=True)
 
 class EmpruntBase(SQLModel):
-    montant: int
+    montant: float
+    devise: Devise
     proprio: str
     statut: bool = Field(default=False)
     user_id: int = Field(foreign_key="user.id")
