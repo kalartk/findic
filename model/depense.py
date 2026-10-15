@@ -32,7 +32,7 @@ def get_depense_id(id:UUID, session: Session) -> Depense | None:
     finally:
         session.close()
 
-def update_depense_id(id: UUID,data, session: Session, depense: Depense) -> Depense:
+def update_depense_id(data, session: Session, depense: Depense) -> Depense:
     try:
         modification = data.model_dump(exclude_unset=True)
         depense.sqlmodel_update((modification))
