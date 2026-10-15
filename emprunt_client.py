@@ -15,7 +15,6 @@ app_emprunt = APIRouter(
 )
 
 class EmpruntCreate(BaseModel):
-    user_id: int = Field(description="ID of the user")
     montant: float = Field(description="ID of the book")
     devise: Devise = Field(description="la devise/argent a utilise")
     proprio: str
@@ -42,6 +41,15 @@ async def create_emprunt_handler(data: EmpruntCreate,
     ), session)
     return {"message":"emprunt creer"}
 
+
+@app_emprunt.get("/all", status_code=status.HTTP_200_OK)
+async def get_all_emprunt_handler(utilisateur: Annotated[User, Depends(get_header_user)],
+                             session: Annotated[Session, Depends(get_session)]
+) -> list[Emprunt]:
+    emprunt_list = get_all_emprunt(utilisateur.id, session)
+    return emprunt_list
+
+
 @app_emprunt.get("/{id}", status_code=status.HTTP_200_OK)
 async def get_emprunt_id(id: UUID,
                          utilisateur: Annotated[User, Depends(get_header_user)],
@@ -54,12 +62,7 @@ async def get_emprunt_id(id: UUID,
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="vous n'avez pas acces a cet emprunt")
     return emprunt
 
-@app_emprunt.get("/all", status_code=status.HTTP_200_OK)
-async def get_all_emprunt_id(utilisateur: Annotated[User, Depends(get_header_user)],
-                             session: Annotated[Session, Depends(get_session)]
-) -> list[Emprunt]:
-    emprunt_list = get_all_emprunt(utilisateur.id, session)
-    return emprunt_list
+
 
 @app_emprunt.put("/{id}", status_code=status.HTTP_200_OK)
 async def update_emprunt_id(id: UUID,
@@ -75,7 +78,7 @@ async def update_emprunt_id(id: UUID,
     updated_emprunt = update_emprunt(data, emprunt, session)
     return updated_emprunt
 
-@app_emprunt.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@app_emprunt.delete("/{id}", status_code=status.HTTP_200_OK)
 async def delete_emprunt_id(id: UUID,
                             utilisateur: Annotated[User, Depends(get_header_user)],
                             session: Annotated[Session, Depends(get_session)]
