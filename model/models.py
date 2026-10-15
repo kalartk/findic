@@ -23,7 +23,7 @@ class DepenseBase(SQLModel):
     created_at: datetime = Field(default=datetime.now(timezone.utc))
 
 class Depense(DepenseBase, table=True):
-    id: UUID = Field(default=uuid7(), primary_key=True)
+    id: UUID = Field(default_factory=uuid7, primary_key=True)
 
 class DetteBase(SQLModel):
     motif: str
@@ -45,7 +45,7 @@ class EmpruntBase(SQLModel):
     created_at: datetime = Field(default=datetime.now(timezone.utc))
 
 class Emprunt(EmpruntBase, table=True):
-    id: UUID = Field(default=uuid7(), primary_key=True)
+    id: UUID = Field(default_factory=uuid7, primary_key=True)
 
 class AvoirBase(SQLModel):
     devise: Devise
@@ -55,4 +55,4 @@ class AvoirBase(SQLModel):
     created_at: datetime = Field(default=datetime.now(timezone.utc))
 
 class Avoir(AvoirBase, table=True):
-    id: UUID = Field(default=uuid7(), primary_key=True)
+    id: UUID = Field(default_factory=uuid7, primary_key=True)
