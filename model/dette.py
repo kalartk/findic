@@ -33,15 +33,15 @@ def get_all_dette(id: int, session: Session) -> list[Dette]:
     finally:
         session.close()
 
-def update_dette(data_modif: Dette, objet: Dette, session: Session) -> Dette:
+def update_dette(data_modif, donne_dette: Dette, session: Session) -> Dette:
     try:
         modifications = data_modif.model_dump(exclude_unset=True)
-        objet.sqlmodel_update(modifications)
-        session.add(object)
+        donne_dette.sqlmodel_update(modifications)
+        session.add(donne_dette)
         session.commit()
-        session.refresh(object)
+        session.refresh(donne_dette)
 
-        return objet
+        return donne_dette
 
     finally:
         session.close()
