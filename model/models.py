@@ -55,4 +55,4 @@ class AvoirBase(SQLModel):
     created_at: datetime = Field(default=datetime.now(timezone.utc))
 
 class Avoir(AvoirBase, table=True):
-    id: UUID = Field(default=uuid7(), primary_key=True)
+    id: UUID = Field(default_factory=uuid7, primary_key=True)

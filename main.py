@@ -5,6 +5,7 @@ from user_client import app_user
 from auth.auth import app_auth
 from database.db import init_db
 from depense_client import app_depense
+from avoir_client import app_avoir
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -16,6 +17,7 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(router=app_user)
 app.include_router(router=app_auth)
 app.include_router(router=app_depense)
+app.include_router(router=app_avoir)
 
 @app.get("/")
 async def index():
